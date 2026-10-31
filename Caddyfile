@@ -1,0 +1,14 @@
+# Enabled with: docker compose --profile proxy up -d
+# Requires DNS A records for dashboard.<DOMAIN> and n8n.<DOMAIN> pointing at the VM.
+{
+	email {$ACME_EMAIL}
+}
+
+dashboard.{$DOMAIN} {
+	reverse_proxy dashboard:8501
+}
+
+n8n.{$DOMAIN} {
+	reverse_proxy n8n:5678
+}
+# The backend API is intentionally NOT exposed publicly.

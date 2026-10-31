@@ -1,0 +1,3 @@
+default_interval_minutes: 5
+greenhouse:
+  - { board: exampleboard, company: Example }

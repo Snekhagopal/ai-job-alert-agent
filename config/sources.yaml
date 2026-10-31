@@ -1,0 +1,125 @@
+# Job sources. Every board below was checked to respond on its public API on 2026-10-31.
+# Add more companies by finding their careers page's ATS:
+#   jobs.lever.co/<slug>            -> lever: company_slug
+#   boards.greenhouse.io/<board> or job-boards.greenhouse.io/<board> -> greenhouse: board
+#   jobs.ashbyhq.com/<org>          -> ashby: org
+# Test a new entry with:  python scripts/check_sources.py
+
+# ATS boards answer 304 Not Modified when nothing changed, so a 2-minute poll is cheap.
+default_interval_minutes: 2
+
+# Boards added on 2026-10-31 were verified live: the board API answered, its company name
+# matched, and it had India-based roles. "careers-link" = the company's own careers page (or
+# the board's job URLs) points to this board; "board-name" = name and job content match but
+# the careers page is JavaScript-rendered, so the link itself could not be confirmed.
+greenhouse:
+  - { board: razorpaysoftwareprivatelimited, company: Razorpay }
+  - { board: groww, company: Groww }
+  - { board: inmobi, company: InMobi }
+  - { board: databricks, company: Databricks }
+  - { board: druva, company: Druva }
+  - { board: mongodb, company: MongoDB }            # careers-link (jobs on mongodb.com)
+  - { board: elastic, company: Elastic }            # careers-link (jobs.elastic.co)
+  - { board: rubrik, company: Rubrik }              # careers-link (jobs on rubrik.com)
+  - { board: observeai, company: Observe.AI }       # careers-link (embed on observe.ai/careers)
+  - { board: netskope, company: Netskope }          # careers-link (jobs on netskope.com)
+  - { board: glance, company: Glance }              # careers-link (glance.com/careers)
+  - { board: truefoundry, company: TrueFoundry }    # careers-link (careerpuck page)
+  - { board: zscaler, company: Zscaler }            # board-name
+  - { board: gleanwork, company: Glean }            # board-name
+  - { board: turing, company: Turing }              # board-name
+  - { board: sigmoid, company: Sigmoid }            # board-name
+  - { board: hackerrank, company: HackerRank }      # board-name
+  - { board: anthropic, company: Anthropic }        # board-name
+
+lever:
+  - { company_slug: cred, company: CRED }
+  - { company_slug: meesho, company: Meesho }
+  - { company_slug: fampay, company: FamPay }
+  - { company_slug: zeta, company: Zeta }
+  - { company_slug: paytm, company: Paytm }
+  - { company_slug: mindtickle, company: Mindtickle }   # careers-link
+  - { company_slug: hevodata, company: Hevo Data }     # careers-link
+  # NOT jobs.lever.co/linkedin: that board is "LinkedIn Partner Sandbox", not LinkedIn careers.
+
+ashby:
+  - { org: sarvam, company: Sarvam AI }
+  - { org: composio, company: Composio }
+  - { org: atlan, company: Atlan }
+  - { org: bolna, company: Bolna AI }       # careers-link
+  - { org: ema, company: Ema }              # board-name
+  - { org: spotdraft, company: SpotDraft }  # board-name
+
+# Workday career sites, via the public no-login JSON endpoint each career site itself uses.
+# Not a documented public API, so it can be switched off here at any time (enabled: false).
+# robots.txt is checked on every host. Searches use the site's own India location filter.
+# Workday gives the posting DATE only. Find a company's values from its careers URL:
+#   https://<tenant>.<wd>.myworkdayjobs.com/<site>   (e.g. intel.wd1.myworkdayjobs.com/External)
+workday:
+  enabled: true
+  interval_minutes: 5
+  max_pages: 1          # 20 postings per search term per check
+  search_terms: ["machine learning", "AI engineer", "data scientist", "deep learning", "NLP",
+                 "computer vision", "generative AI", "LLM"]
+  tenants:
+    - { company: Intel, tenant: intel, wd: wd1, site: External }                          # careers-link
+    - { company: Mastercard, tenant: mastercard, wd: wd1, site: CorporateCareers }        # careers-link
+    - { company: Target, tenant: target, wd: wd5, site: targetcareers }                   # careers-link
+    - { company: KLA, tenant: kla, wd: wd1, site: Search }                                # careers-link (Chennai)
+    - { company: Micron, tenant: micron, wd: wd1, site: External }                        # careers-link
+    - { company: Caterpillar, tenant: cat, wd: wd5, site: CaterpillarCareers }            # careers-link
+    - { company: Wolters Kluwer, tenant: wk, wd: wd3, site: External }                    # careers-link
+    - { company: Expedia Group, tenant: expedia, wd: wd108, site: search }                # careers-link
+    - { company: NVIDIA, tenant: nvidia, wd: wd5, site: NVIDIAExternalCareerSite }        # board-name
+    - { company: Adobe, tenant: adobe, wd: wd5, site: external_experienced }              # board-name
+    - { company: PayPal, tenant: paypal, wd: wd1, site: jobs }                            # board-name (Chennai)
+    - { company: HP, tenant: hp, wd: wd5, site: ExternalCareerSite }                      # board-name
+    - { company: Philips, tenant: philips, wd: wd3, site: jobs-and-careers }              # board-name
+    - { company: Thomson Reuters, tenant: thomsonreuters, wd: wd5, site: External_Career_Site }  # board-name
+    - { company: Gartner, tenant: gartner, wd: wd5, site: EXT }                           # board-name (Chennai)
+    - { company: Salesforce, tenant: salesforce, wd: wd12, site: External_Career_Site }   # board-name
+    - { company: Lowe's, tenant: lowes, wd: wd5, site: LWS_External_CS }                  # board-name
+
+# Official aggregator APIs (free keys). Adzuna covers many Indian boards; descriptions are snippets.
+# Adzuna's free tier is rate limited, so it is polled every 30 min with few queries.
+adzuna:
+  enabled: false   # set true after adding ADZUNA_APP_ID / ADZUNA_APP_KEY
+  interval_minutes: 30
+  queries:
+    - { what: "machine learning engineer", where: "Bangalore", max_days_old: 2 }
+    - { what: "machine learning engineer", where: "Chennai", max_days_old: 2 }
+    - { what: "AI engineer remote", max_days_old: 2 }
+
+jooble:
+  enabled: false   # set true after adding JOOBLE_API_KEY
+  interval_minutes: 30
+  queries:
+    - { keywords: "machine learning engineer fresher", location: "Bangalore" }
+    - { keywords: "AI ML engineer", location: "Chennai" }
+    - { keywords: "generative AI engineer remote", location: "India" }
+
+# Any RSS/Atom job feed you are allowed to read. robots.txt is enforced.
+rss: []
+#  - { name: example-company, url: "https://careers.example.com/jobs.rss", company: Example, interval_minutes: 15 }
+
+# Job-alert emails delivered to YOUR Gmail inbox (create the alerts on each site first:
+# docs/EMAIL_ALERTS.md). Gmail is checked every minute; the real delay is how often each
+# platform sends its alerts, usually once a day. A platform's parser counts as verified only
+# after a REAL sample email passes (scripts/capture_alert_samples.py). Platforms marked
+# "awaiting sample" stay disabled until then, so their emails are not marked processed
+# with zero jobs extracted. `query` is optional (sender-domain default in job_sources.py).
+email_interval_minutes: 1
+email_alerts:
+  linkedin:    { enabled: true }    # parser verified with a sample email
+  naukri:      { enabled: true }    # existing parser, not yet checked against a real email
+  instahyre:   { enabled: true }    # existing parser, not yet checked against a real email
+  cutshort:    { enabled: true }    # existing parser, not yet checked against a real email
+  wellfound:   { enabled: true }    # existing parser, not yet checked against a real email
+  indeed:      { enabled: false }   # awaiting sample
+  glassdoor:   { enabled: false }   # awaiting sample
+  foundit:     { enabled: false }   # awaiting sample
+  iimjobs:     { enabled: false }   # awaiting sample
+  hirist:      { enabled: false }   # awaiting sample
+  timesjobs:   { enabled: false }   # awaiting sample
+  internshala: { enabled: false }   # awaiting sample
+  shine:       { enabled: false }   # awaiting sample
